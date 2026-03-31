@@ -20,8 +20,3 @@ jobs:
 
       - name: Run script
         run: python script.py
-
-      - name: Print time
-        run: |
-                echo "Workflow triggered"
-                date
