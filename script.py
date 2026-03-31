@@ -1,6 +1,8 @@
 from datetime import datetime
+import csv
 
-with open("log.txt", "a") as f:
-    f.write(f"Script eseguito alle {datetime.utcnow()}\n")
+with open("log.csv", "a", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["Script eseguito", datetime.utcnow()])
 
 print("Script eseguito!")
