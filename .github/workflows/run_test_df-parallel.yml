@@ -1,4 +1,4 @@
-name: Parallel Data Pipeline with test_dataframe.py
+name: run_test_df_parallel
 
 on:
   workflow_dispatch
@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Set number of workers
         id: set-workers
-        run: echo "workers=5" >> $GITHUB_OUTPUT
+        run: echo "workers=2" >> $GITHUB_OUTPUT
 
   worker:
     needs: orchestrator
@@ -71,3 +71,9 @@ jobs:
         with:
           name: merged-output
           path: merged.csv
+
+      - name: Upload CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: dataframe-output
+          path: adunits.csv
