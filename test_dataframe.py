@@ -9,6 +9,6 @@ data = {
 df = pd.DataFrame(data)
 
 # Scrittura su CSV
-#df.to_csv("adunits.csv", index=False)
+df.to_csv("adunits.csv", index=False)
 
 print("CSV creato con successo!")
