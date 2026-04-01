@@ -2,8 +2,8 @@ import pandas as pd
 
 # Creazione del DataFrame
 data = {
-    "top_adunit": ["corriere.it"],
-    "impressions": [1000]
+    "top_adunit": ["corriere.it","gazzetta.it"],
+    "impressions": [1000,2000]
 }
 
 df = pd.DataFrame(data)
