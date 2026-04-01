@@ -21,7 +21,7 @@ jobs:
 
     strategy:
       matrix:
-        worker_id: [1,2,3,4,5]
+        worker_id: [1,2]
 
     steps:
       # 1️⃣ Checkout repository per avere accesso a test_dataframe.py
