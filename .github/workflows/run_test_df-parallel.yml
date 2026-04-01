@@ -1,0 +1,73 @@
+name: Parallel Data Pipeline with test_dataframe.py
+
+on:
+  workflow_dispatch
+
+jobs:
+
+  orchestrator:
+    runs-on: ubuntu-latest
+    outputs:
+      workers: ${{ steps.set-workers.outputs.workers }}
+
+    steps:
+      - name: Set number of workers
+        id: set-workers
+        run: echo "workers=5" >> $GITHUB_OUTPUT
+
+  worker:
+    needs: orchestrator
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        worker_id: [1,2,3,4,5]
+
+    steps:
+      # 1️⃣ Checkout repository per avere accesso a test_dataframe.py
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      # 3️⃣ Install dependencies
+      - name: Install dependencies
+        run: pip install pandas
+
+      # 4️⃣ Esegui test_dataframe.py
+      - name: Run test_dataframe.py
+        run: |
+          python test_dataframe.py
+          # Rinomina il CSV generato in modo univoco per ogni worker
+          mv adunits.csv output_${{ matrix.worker_id }}.csv
+
+      # 5️⃣ Upload del CSV come artifact
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: result-${{ matrix.worker_id }}
+          path: output_${{ matrix.worker_id }}.csv
+
+  merge-results:
+    needs: worker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all worker artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./results
+
+      - name: Merge CSVs
+        run: |
+          cat results/result-*/output_*.csv > merged.csv
+
+      - name: Upload merged CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-output
+          path: merged.csv
