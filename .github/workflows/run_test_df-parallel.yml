@@ -66,6 +66,10 @@ jobs:
         run: |
           cat results/result-*/output_*.csv > merged.csv
 
+      - name: Merge CSVs removing duplicates
+        run: |
+             cat results/result-*/output_*.csv | sort | uniq > merged.csv
+
       - name: Upload merged CSV
         uses: actions/upload-artifact@v4
         with:
@@ -76,4 +80,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dataframe-output
-          path: adunits.csv
+          path: merged.csv
